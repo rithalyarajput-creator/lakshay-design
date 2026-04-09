@@ -8,14 +8,33 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update README deploy badge info
+        run: |
+          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          SHORT_SHA="${{ github.sha }}"
+          SHORT_SHA=${SHORT_SHA:0:7}
+
+          # Update last deployed line in README
+          sed -i "s|\*Built and deployed.*|*Last deployed: $DATE — commit `$SHORT_SHA` — $COMMIT_MSG*|" README.md
+
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add README.md
+          git diff --staged --quiet || git commit -m "chore: update deploy timestamp [$SHORT_SHA]"
+          git push || true
+
       - name: Trigger live deployment
         env:
           WEBHOOK_SECRET: clicksemrus_deploy_secret_2024
         run: |
           PAYLOAD='{"ref":"refs/heads/main","after":"${{ github.sha }}","head_commit":{"message":"${{ github.event.head_commit.message }}"}}'
-          SIG=sha256=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | awk '{print $2}')
+          SIG=sha256$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | awk '{print "=" $2}')
           curl -s -X POST https://clicksemrus.com/webhook.php \
             -H "Content-Type: application/json" \
             -H "X-Hub-Signature-256: $SIG" \
             -d "$PAYLOAD"
-          echo "Deployed commit: ${{ github.sha }}"
+          echo "✅ Deployed: ${{ github.sha }}"
