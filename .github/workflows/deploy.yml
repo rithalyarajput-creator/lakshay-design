@@ -1,0 +1,21 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger live deployment
+        env:
+          WEBHOOK_SECRET: clicksemrus_deploy_secret_2024
+        run: |
+          PAYLOAD='{"ref":"refs/heads/main","after":"${{ github.sha }}","head_commit":{"message":"${{ github.event.head_commit.message }}"}}'
+          SIG=sha256=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | awk '{print $2}')
+          curl -s -X POST https://clicksemrus.com/webhook.php \
+            -H "Content-Type: application/json" \
+            -H "X-Hub-Signature-256: $SIG" \
+            -d "$PAYLOAD"
+          echo "Deployed commit: ${{ github.sha }}"
