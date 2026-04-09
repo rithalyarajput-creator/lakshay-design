@@ -45,7 +45,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
         <button onClick={onClose} style={{
           position: 'absolute', top: 16, right: 16, background: 'none',
           border: 'none', fontSize: 20, cursor: 'pointer', color: '#999'
-        }}>✕</button>
+        }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
 
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>

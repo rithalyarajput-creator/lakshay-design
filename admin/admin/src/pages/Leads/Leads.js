@@ -45,7 +45,7 @@ export default function Leads() {
   const fetchLeads = async () => {
     setLoading(true);
     try {
-      const res  = await fetch('https://clicksemrus.com/api.php/leads');
+      const res  = await fetch('https://amshine-backend.onrender.com/api/leads');
       const data = await res.json();
       if (data.success) setLeads(data.leads);
     } catch (err) { console.error(err); }
@@ -55,7 +55,7 @@ export default function Leads() {
   useEffect(() => { fetchLeads(); }, []);
 
   const updateStatus = async (id, status) => {
-    await fetch(`https://clicksemrus.com/api.php/leads/${id}/status`, {
+    await fetch(`https://amshine-backend.onrender.com/api/leads/${id}/status`, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     });
@@ -65,7 +65,7 @@ export default function Leads() {
 
   const deleteLead = async (id) => {
     if (!window.confirm('Delete this lead?')) return;
-    await fetch(`https://clicksemrus.com/api.php/leads/${id}`, { method: 'DELETE' });
+    await fetch(`https://amshine-backend.onrender.com/api/leads/${id}`, { method: 'DELETE' });
     setLeads(prev => prev.filter(l => l._id !== id));
     setSelected(null);
   };

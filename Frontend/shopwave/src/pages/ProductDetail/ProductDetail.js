@@ -8,7 +8,9 @@ import { API_BASE, getImageUrl } from '../../data/products';
 const Stars = ({ rating }) => (
   <div className="pd-stars">
     {[1,2,3,4,5].map(i=>(
-      <span key={i} style={{color:i<=Math.round(rating)?'var(--gold)':'#ddd',fontSize:'16px'}}>★</span>
+      <span key={i} style={{color:i<=Math.round(rating)?'var(--gold)':'#ddd',fontSize:'16px',display:'inline-block',verticalAlign:'middle'}}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{display:'inline-block',verticalAlign:'middle'}}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </span>
     ))}
   </div>
 );
@@ -130,7 +132,7 @@ const ProductDetail = () => {
               <span className="pd-rav">{product.rating||4}</span>
               <span className="pd-rct">({(product.reviewCount||0)} reviews)</span>
               {inStock
-                ? <span className="pd-instock">✓ In Stock</span>
+                ? <span className="pd-instock"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> In Stock</span>
                 : <span className="pd-outstock">Out of Stock</span>
               }
             </div>
@@ -156,7 +158,7 @@ const ProductDetail = () => {
 
             <div className="pd-cta">
               <button className={`pd-atc${justAdded?' added':''}`} onClick={onAdd} disabled={!inStock}>
-                {justAdded ? '✓ Added to Cart!' : inStock ? 'Add to Cart' : 'Out of Stock'}
+                {justAdded ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> Added to Cart!</> : inStock ? 'Add to Cart' : 'Out of Stock'}
               </button>
               <button className="pd-buynow" onClick={onBuyNow} disabled={!inStock}>
                 {inStock ? 'Buy Now' : 'Unavailable'}

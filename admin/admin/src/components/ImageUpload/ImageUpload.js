@@ -34,7 +34,7 @@ export default function ImageUpload({ images = [], onChange, multiple = true }) 
         onDrop={handleDrop}
         onClick={() => inputRef.current.click()}
       >
-        <div className={styles.dropIcon}>🖼️</div>
+        <div className={styles.dropIcon}><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.5}}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
         <div className={styles.dropText}>
           <strong>Click to upload</strong> or drag & drop
         </div>
@@ -54,7 +54,7 @@ export default function ImageUpload({ images = [], onChange, multiple = true }) 
           {images.map((img, i) => (
             <div key={i} className={styles.previewItem}>
               <img src={img.preview || img.url || img} alt="" className={styles.previewImg} />
-              <button className={styles.removeBtn} onClick={() => removeImage(i)}>✕</button>
+              <button className={styles.removeBtn} onClick={() => removeImage(i)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             </div>
           ))}
         </div>

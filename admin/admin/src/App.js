@@ -18,6 +18,7 @@ import Subscriptions from './pages/Subscriptions/Subscriptions';
 import Leads from './pages/Leads/Leads';
 import CMS from './pages/CMS/CMS';
 import Testimonials from './pages/Testimonials/Testimonials';
+import Blog from './pages/Blog/Blog';
 import styles from './App.module.css';
 
 function PrivateRoute() {
@@ -62,6 +63,7 @@ export default function App() {
               <Route path="/leads"         element={<Leads />} />
               <Route path="/cms"           element={<CMS />} />
               <Route path="/testimonials"  element={<Testimonials />} />
+              <Route path="/blog"          element={<Blog />} />
               <Route path="/settings"      element={<Settings />} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

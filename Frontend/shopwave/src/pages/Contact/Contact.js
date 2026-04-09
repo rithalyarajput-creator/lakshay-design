@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from '../../components/Footer/Footer';
 import styles from './Contact.module.css';
 
-const API = process.env.REACT_APP_API_URL || 'https://clicksemrus.com/api';
+const API = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
 // Professional SVG Icons
 const IconPin = () => (
@@ -141,7 +141,7 @@ const Contact = () => {
           <div className={styles.formPanel}>
             {sent ? (
               <div className={styles.successBox}>
-                <div className={styles.successIcon}>✓</div>
+                <div className={styles.successIcon}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
                 <h3 className={styles.successTitle}>Message Sent!</h3>
                 <p className={styles.successText}>Thank you for reaching out. We'll get back to you within 24 hours.</p>
                 <button className={styles.resetBtn} onClick={() => { setSent(false); setForm({ name:'', email:'', phone:'', subject:'', message:'' }); }}>

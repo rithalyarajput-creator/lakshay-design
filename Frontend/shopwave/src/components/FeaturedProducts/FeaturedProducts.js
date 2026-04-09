@@ -59,7 +59,7 @@ const FeaturedProducts = ({ products = [], loading = false }) => {
         <div className="loading-wrap"><div className="loading-spinner"/></div>
       ) : shown.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">💍</div>
+          <div className="empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M6 3h12l4 6-10 13L2 9 6 3z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg></div>
           <div className="empty-title">No products in this tab yet</div>
           <p className="empty-text">Add products from Admin Panel</p>
         </div>

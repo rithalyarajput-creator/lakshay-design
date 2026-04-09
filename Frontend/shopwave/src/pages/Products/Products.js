@@ -158,7 +158,7 @@ const Products = () => {
             </div>
           ) : (
             <div style={{textAlign:'center',padding:'80px'}}>
-              <div style={{fontSize:52,marginBottom:16}}>🔍</div>
+              <div style={{fontSize:52,marginBottom:16}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
               <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:28,marginBottom:8}}>No products found</div>
               <p style={{fontSize:13,color:'var(--text-muted)',marginBottom:24}}>Try adjusting your filters or search</p>
               <button onClick={clearFilters} className="btn-fill"><span>Clear Filters</span></button>

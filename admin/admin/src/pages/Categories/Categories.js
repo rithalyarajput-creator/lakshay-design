@@ -13,7 +13,7 @@ const CAT_COLORS = [
 
 const API_BASE = process.env.REACT_APP_API_URL
   ? process.env.REACT_APP_API_URL.replace('/api', '')
-  : 'https://clicksemrus.com';
+  : 'https://amshine-backend.onrender.com';
 
 // Jewelry SVG icons map
 const JEWELRY_SVG = {
@@ -157,7 +157,7 @@ export default function Categories() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editCat, setEditCat] = useState(null);
-  const [form, setForm] = useState({ name: '', emoji: '📦' });
+  const [form, setForm] = useState({ name: '' });
   const [image, setImage] = useState([]);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -201,11 +201,11 @@ export default function Categories() {
     });
   };
 
-  const openAdd = () => { setForm({ name: '', emoji: '📦' }); setImage([]); setEditCat(null); setModalOpen(true); };
+  const openAdd = () => { setForm({ name: '' }); setImage([]); setEditCat(null); setModalOpen(true); };
   const openEdit = (cat, e) => {
     e.stopPropagation();
     setEditCat(cat);
-    setForm({ name: cat.name, emoji: cat.emoji || '📦' });
+    setForm({ name: cat.name });
     setImage(cat.image ? [{ preview: cat.image.startsWith('http') ? cat.image : `${API_BASE}${cat.image}`, url: cat.image }] : []);
     setModalOpen(true);
   };
@@ -214,7 +214,7 @@ export default function Categories() {
     if (!form.name) { addToast('Category name is required', 'error'); return; }
     setSaving(true);
     try {
-      const payload = { name: form.name, emoji: form.emoji };
+      const payload = { name: form.name };
       let savedCat;
       if (editCat) {
         const res = await api.put(`/categories/${editCat._id}`, payload);
@@ -254,7 +254,6 @@ export default function Categories() {
     }
   };
 
-  const EMOJIS = ['💍','📿','💎','✨','👑','🌸','🌺','❤️','💫','🌟','🦋','🌙','⚡','👸','🔮'];
 
   // Category drill-down view
   if (selectedCat) {
@@ -268,7 +267,7 @@ export default function Categories() {
               ← Back
             </button>
             <div>
-              <h1 style={{ fontSize:22, fontWeight:700 }}>{selectedCat.emoji || '📦'} {selectedCat.name}</h1>
+              <h1 style={{ fontSize:22, fontWeight:700 }}>{selectedCat.name}</h1>
               <p style={{ fontSize:13, color:'var(--text-muted)', marginTop:2 }}>{catProds.length} products in this category</p>
             </div>
           </div>
@@ -276,7 +275,7 @@ export default function Categories() {
 
         {catProds.length === 0 ? (
           <div style={{ textAlign:'center', padding:'60px 40px' }}>
-            <div style={{ fontSize:48, marginBottom:16 }}>📦</div>
+            <div style={{ marginBottom:16 }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
             <h3 style={{ fontWeight:600, marginBottom:8 }}>No products in this category</h3>
             <p style={{ color:'var(--text-muted)', fontSize:13 }}>Add products from Products page and assign this category</p>
           </div>
@@ -287,7 +286,7 @@ export default function Categories() {
                 <div style={{ width:'100%', aspectRatio:'1/1', borderRadius:8, overflow:'hidden', background:'#F3F4F6', marginBottom:12, display:'flex', alignItems:'center', justifyContent:'center' }}>
                   {p.images?.[0]
                     ? <img src={p.images[0].startsWith('http') ? p.images[0] : `${API_BASE}${p.images[0]}`} alt={p.title} style={{ width:'100%', height:'100%', objectFit:'cover' }} onError={e=>e.target.style.display='none'} />
-                    : <span style={{ fontSize:32 }}>{JEWELRY_SVG[selectedCat?.name] || '💍'}</span>
+                    : (JEWELRY_SVG[selectedCat?.name] || <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 3h12l4 6-10 13L2 9 6 3z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>)
                   }
                 </div>
                 <div style={{ fontWeight:600, fontSize:13, marginBottom:4, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.title}</div>
@@ -320,7 +319,7 @@ export default function Categories() {
         <div style={{ textAlign:'center', padding:60 }}><div className="spinner spinner-lg" /></div>
       ) : categories.length === 0 ? (
         <div style={{ textAlign:'center', padding:60 }}>
-          <div style={{ fontSize:48, marginBottom:16 }}>📂</div>
+          <div style={{ marginBottom:16 }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
           <h3>No categories yet</h3>
           <p style={{ color:'var(--text-muted)', marginTop:8 }}>Add your first product category</p>
         </div>
@@ -347,7 +346,9 @@ export default function Categories() {
                       {svgIcon}
                     </div>
                   ) : (
-                    <span style={{ fontSize:52 }}>{cat.emoji || '💍'}</span>
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.25))' }}>
+                      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"><path d="M6 3h12l4 6-10 13L2 9 6 3z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+                    </div>
                   )}
                   {/* Product count badge */}
                   <div style={{ position:'absolute', top:10, right:10, background:'rgba(0,0,0,0.55)', color:'#fff', borderRadius:99, padding:'3px 10px', fontSize:12, fontWeight:700 }}>
@@ -365,8 +366,8 @@ export default function Categories() {
 
                 {/* Actions */}
                 <div style={{ padding:'0 16px 14px', display:'flex', gap:8 }} onClick={e => e.stopPropagation()}>
-                  <button className="btn btn-outline btn-sm" style={{ flex:1 }} onClick={e => openEdit(cat, e)}>✏️ Edit</button>
-                  <button className="btn btn-danger btn-sm" onClick={e => { e.stopPropagation(); setDeleteId(cat._id); }}>🗑️</button>
+                  <button className="btn btn-outline btn-sm" style={{ flex:1 }} onClick={e => openEdit(cat, e)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
+                  <button className="btn btn-danger btn-sm" onClick={e => { e.stopPropagation(); setDeleteId(cat._id); }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
                 </div>
               </div>
             );
@@ -380,7 +381,7 @@ export default function Categories() {
           <>
             <button className="btn btn-ghost" onClick={() => setModalOpen(false)}>Cancel</button>
             <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-              {saving ? <span className="spinner" /> : (editCat ? '💾 Update' : '＋ Add')}
+              {saving ? <span className="spinner" /> : (editCat ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Update</> : '＋ Add')}
             </button>
           </>
         }
@@ -388,19 +389,6 @@ export default function Categories() {
         <div className="form-group">
           <label className="form-label">Category Name *</label>
           <input className="form-control" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Bridal Sets" />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Emoji (fallback icon)</label>
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:8 }}>
-            {EMOJIS.map(em => (
-              <button key={em} type="button" onClick={() => setForm(f => ({ ...f, emoji: em }))}
-                style={{ width:36, height:36, borderRadius:8, border: form.emoji===em ? '2px solid var(--primary)' : '1px solid var(--border)', background: form.emoji===em ? '#EEF2FF' : '#fff', fontSize:18, cursor:'pointer' }}>
-                {em}
-              </button>
-            ))}
-          </div>
-          <div style={{ fontSize:12, color:'var(--text-muted)' }}>Shows when no image is uploaded</div>
         </div>
 
         <div className="form-group">

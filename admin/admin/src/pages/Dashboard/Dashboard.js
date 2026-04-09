@@ -69,10 +69,10 @@ export default function Dashboard() {
   }, []);
 
   const statsCards = [
-    { title: 'Total Revenue', value: `₹${(stats?.totalRevenue || 0).toLocaleString()}`, icon: '💰', change: '12.5%', changeType: 'up', color: '#6C63FF' },
-    { title: 'Total Orders', value: (stats?.totalOrders || 0).toLocaleString(), icon: '🛍️', change: '8.2%', changeType: 'up', color: '#10B981' },
-    { title: 'Total Products', value: (stats?.totalProducts || 0).toLocaleString(), icon: '📦', change: '3.1%', changeType: 'up', color: '#F59E0B' },
-    { title: 'Total Customers', value: (stats?.totalCustomers || 0).toLocaleString(), icon: '👥', change: '2.4%', changeType: 'down', color: '#EF4444' },
+    { title: 'Total Revenue', value: `₹${(stats?.totalRevenue || 0).toLocaleString()}`, icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, change: '12.5%', changeType: 'up', color: '#6C63FF' },
+    { title: 'Total Orders', value: (stats?.totalOrders || 0).toLocaleString(), icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>, change: '8.2%', changeType: 'up', color: '#10B981' },
+    { title: 'Total Products', value: (stats?.totalProducts || 0).toLocaleString(), icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>, change: '3.1%', changeType: 'up', color: '#F59E0B' },
+    { title: 'Total Customers', value: (stats?.totalCustomers || 0).toLocaleString(), icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, change: '2.4%', changeType: 'down', color: '#EF4444' },
   ];
 
   if (loading) {
@@ -126,7 +126,7 @@ export default function Dashboard() {
             <button className="btn btn-outline btn-sm" onClick={() => navigate('/orders')}>View All →</button>
           </div>
           {recentOrders.length === 0 ? (
-            <div className="empty-state"><div className="empty-icon">📭</div><h3>No orders yet</h3></div>
+            <div className="empty-state"><div className="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><h3>No orders yet</h3></div>
           ) : (
             <table className={styles.table}>
               <thead>
@@ -153,14 +153,14 @@ export default function Dashboard() {
             <button className="btn btn-outline btn-sm" onClick={() => navigate('/products')}>View All →</button>
           </div>
           {topProducts.length === 0 ? (
-            <div className="empty-state"><div className="empty-icon">📦</div><h3>No products yet</h3></div>
+            <div className="empty-state"><div className="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><h3>No products yet</h3></div>
           ) : (
             <div className={styles.productList}>
               {topProducts.map((p, i) => (
                 <div key={p._id} className={styles.productItem}>
                   <div className={styles.productRank}>{i + 1}</div>
                   <div className={styles.productImg}>
-                    {p.images?.[0] ? <img src={p.images[0]} alt={p.title} /> : <span>📦</span>}
+                    {p.images?.[0] ? <img src={p.images[0]} alt={p.title} /> : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>}
                   </div>
                   <div className={styles.productInfo}>
                     <div className={styles.productName}>{p.title}</div>

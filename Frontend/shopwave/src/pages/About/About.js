@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
 import styles from './About.module.css';
 
-const API = process.env.REACT_APP_API_URL || 'https://clicksemrus.com/api';
+const API = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
 const About = () => {
   const [cmsData, setCmsData] = useState(null);
@@ -92,12 +92,12 @@ const About = () => {
             <h2 className={styles.sectionTitle} style={{ textAlign: 'center', marginBottom: '48px' }}>Why Choose <em>Amshine</em></h2>
             <div className={styles.valuesGrid}>
               {[
-                { icon: '🏆', title: 'BIS Hallmarked', desc: 'All gold pieces carry the BIS hallmark, guaranteeing 22K purity certified by the Bureau of Indian Standards.' },
-                { icon: '🤲', title: 'Handcrafted', desc: 'Every piece is handmade by master artisans using centuries-old techniques passed down through generations.' },
-                { icon: '🚚', title: 'Free Shipping', desc: 'Free insured shipping across India on orders above Rs.5,000. Your jewellery arrives safely, every time.' },
-                { icon: '🔄', title: '30-Day Returns', desc: 'Not happy? Return within 30 days for a full refund or exchange, no questions asked.' },
-                { icon: '💎', title: 'Lifetime Polish', desc: 'Free cleaning and minor repairs for the lifetime of your jewellery. We stand behind every piece we make.' },
-                { icon: '📦', title: 'Luxury Packaging', desc: 'Each piece arrives in our signature gift box, ready to be gifted or treasured for generations.' },
+                { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>, title: 'BIS Hallmarked', desc: 'All gold pieces carry the BIS hallmark, guaranteeing 22K purity certified by the Bureau of Indian Standards.' },
+                { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>, title: 'Handcrafted', desc: 'Every piece is handmade by master artisans using centuries-old techniques passed down through generations.' },
+                { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>, title: 'Free Shipping', desc: 'Free insured shipping across India on orders above Rs.5,000. Your jewellery arrives safely, every time.' },
+                { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>, title: '30-Day Returns', desc: 'Not happy? Return within 30 days for a full refund or exchange, no questions asked.' },
+                { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 3h12l4 6-10 13L2 9 6 3z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>, title: 'Lifetime Polish', desc: 'Free cleaning and minor repairs for the lifetime of your jewellery. We stand behind every piece we make.' },
+                { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>, title: 'Luxury Packaging', desc: 'Each piece arrives in our signature gift box, ready to be gifted or treasured for generations.' },
               ].map((v, i) => (
                 <div key={i} className={styles.valueCard}>
                   <div className={styles.valueIcon}>{v.icon}</div>

@@ -118,7 +118,7 @@ export default function Offers() {
         <div style={{ textAlign: 'center', padding: 60 }}><div className="spinner" /></div>
       ) : coupons.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>🎫</div>
+          <div style={{ marginBottom: 12 }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
           <p>No coupons yet. Create your first coupon!</p>
         </div>
       ) : (
@@ -159,11 +159,11 @@ export default function Offers() {
 
               {/* Actions */}
               <div style={{ display: 'flex', gap: 8 }}>
-                <button className="btn btn-outline btn-sm" style={{ flex: 1 }} onClick={() => openEdit(coupon)}>✏️ Edit</button>
+                <button className="btn btn-outline btn-sm" style={{ flex: 1 }} onClick={() => openEdit(coupon)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
                 <button className="btn btn-outline btn-sm" style={{ flex: 1, color: coupon.isActive ? '#F59E0B' : '#10B981', borderColor: coupon.isActive ? '#F59E0B' : '#10B981' }} onClick={() => toggleActive(coupon)}>
-                  {coupon.isActive ? '⏸ Disable' : '▶ Enable'}
+                  {coupon.isActive ? <><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Disable</> : <><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Enable</>}
                 </button>
-                <button className="btn btn-danger btn-sm" onClick={() => setDeleteId(coupon._id)}>🗑️</button>
+                <button className="btn btn-danger btn-sm" onClick={() => setDeleteId(coupon._id)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
               </div>
             </div>
           ))}
@@ -175,7 +175,7 @@ export default function Offers() {
         footer={
           <>
             <button className="btn btn-ghost" onClick={() => setModalOpen(false)}>Cancel</button>
-            <button className="btn btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : editCoupon ? '✅ Update' : '＋ Create'}</button>
+            <button className="btn btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : editCoupon ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> Update</> : '＋ Create'}</button>
           </>
         }
       >
@@ -184,7 +184,7 @@ export default function Offers() {
             <label className="form-label">Coupon Code *</label>
             <div style={{ display: 'flex', gap: 8 }}>
               <input className="form-control" value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} placeholder="e.g. SAVE20" style={{ flex: 1 }} />
-              <button className="btn btn-ghost" onClick={() => setForm(f => ({ ...f, code: generateCode() }))}>🔄</button>
+              <button className="btn btn-ghost" onClick={() => setForm(f => ({ ...f, code: generateCode() }))}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
             </div>
           </div>
           <div className="form-group" style={{ gridColumn: '1/-1' }}>

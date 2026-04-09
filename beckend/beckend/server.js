@@ -17,6 +17,8 @@ const faqRoutes = require("./routes/faqRoutes");
 const userRoutes = require("./routes/userRoutes");
 const scrapeRoutes = require("./routes/scrapeRoutes");
 const testimonialRoutes = require("./routes/testimonialRoutes");
+const newsletterRoutes = require("./routes/newsletterRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 
 // Connect to MongoDB
 connectDB();
@@ -48,6 +50,8 @@ app.use("/api/faqs", faqRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/scrape", scrapeRoutes);
 app.use("/api/testimonials", testimonialRoutes);
+app.use("/api/newsletter", newsletterRoutes);
+app.use("/api/blog", blogRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

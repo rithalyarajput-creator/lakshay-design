@@ -10,8 +10,10 @@ import Cart from './pages/Cart/Cart';
 import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
 import Footer from './components/Footer/Footer';
+import BlogPage from './pages/Blog/Blog';
+import BlogPost from './pages/Blog/BlogPost';
 
-const API = process.env.REACT_APP_API_URL || 'https://clicksemrus.com/api';
+const API = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
 // ── Inline FAQs Page (no separate file needed) ────────────────
 const FAQChevron = ({ open }) => (
@@ -161,6 +163,8 @@ function App() {
               <Route path="/shipping-policy" element={<PolicyPage slug="shipping-policy" />} />
               <Route path="/return-policy" element={<PolicyPage slug="return-policy" />} />
               <Route path="/terms-of-service" element={<PolicyPage slug="terms-of-service" />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </main>

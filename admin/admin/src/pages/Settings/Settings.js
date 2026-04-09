@@ -75,7 +75,7 @@ export default function Settings() {
             className={`${styles.tab} ${activeTab === tab ? styles.activeTab : ''}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === 'store' ? '🏪 Store Settings' : '🎨 Theme Settings'}
+            {tab === 'store' ? <><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Store Settings</> : <><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg> Theme Settings</>}
           </button>
         ))}
       </div>
@@ -133,7 +133,7 @@ export default function Settings() {
                     className={`${styles.styleBtn} ${cardStyle === s ? styles.styleBtnActive : ''}`}
                     onClick={() => setCardStyle(s)}
                   >
-                    <span className={styles.styleIcon}>{s === 'rounded' ? '◉' : '⬛'}</span>
+                    <span className={styles.styleIcon}>{s === 'rounded' ? '●' : '■'}</span>
                     {s.charAt(0).toUpperCase() + s.slice(1)}
                   </button>
                 ))}
@@ -161,7 +161,7 @@ export default function Settings() {
                   borderTop: `4px solid ${primaryColor}`,
                 }}
               >
-                <div className={styles.previewImg} style={{ background: primaryColor + '22' }}>🛍️</div>
+                <div className={styles.previewImg} style={{ background: primaryColor + '22', display:'flex', alignItems:'center', justifyContent:'center' }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{opacity:0.5}}><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
                 <div className={styles.previewBody}>
                   <div className={styles.previewTitle} style={{ fontFamily: font }}>Sample Product</div>
                   <div className={styles.previewPrice} style={{ color: primaryColor }}>₹1,299</div>
@@ -175,7 +175,7 @@ export default function Settings() {
 
         <div className={styles.saveRow}>
           <button className="btn btn-primary" onClick={saveSettings} disabled={saving}>
-            {saving ? <><span className="spinner" /> Saving...</> : '💾 Save Settings'}
+            {saving ? <><span className="spinner" /> Saving...</> : <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Settings</>}
           </button>
         </div>
       </div>

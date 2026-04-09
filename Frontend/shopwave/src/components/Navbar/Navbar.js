@@ -59,6 +59,7 @@ const Navbar = () => {
       <ul className={styles['n-links']}>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/products">Shop</Link></li>
+        <li><Link to="/blog">Blog</Link></li>
         <li><Link to="/about">About Us</Link></li>
         <li><Link to="/contact">Contact</Link></li>
       </ul>
@@ -96,12 +97,12 @@ const Navbar = () => {
         <Link to="/" className={styles['n-drawer-logo']} onClick={()=>setMenuOpen(false)}>
           <img src={LOGO} alt="Amshine" onError={e=>e.target.style.display='none'}/>
         </Link>
-        <button className={styles['n-drawer-x']} onClick={()=>setMenuOpen(false)}>✕</button>
+        <button className={styles['n-drawer-x']} onClick={()=>setMenuOpen(false)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
 
       {/* Nav Links */}
       <ul className={styles['n-drawer-links']}>
-        {[['/', 'Home'],['/products','Shop All'],['/about','About Us'],['/contact','Contact'],['/cart','Cart ('+count+')']].map(([to,label])=>(
+        {[['/', 'Home'],['/products','Shop All'],['/blog','Blog'],['/about','About Us'],['/contact','Contact'],['/cart','Cart ('+count+')']].map(([to,label])=>(
           <li key={to}>
             <Link to={to} onClick={()=>setMenuOpen(false)}>
               {label} <span className={styles['n-arr']}>→</span>
@@ -113,7 +114,7 @@ const Navbar = () => {
       {/* Bottom Actions */}
       <div className={styles['n-drawer-bottom']}>
         <a href="/products?category=bridal" className={`${styles['n-drawer-cta']} ${styles['primary']}`} onClick={()=>setMenuOpen(false)}>
-          ✦ &nbsp;Shop Bridal Collection
+          Shop Bridal Collection
         </a>
         <a href="/contact" className={`${styles['n-drawer-cta']} ${styles['secondary']}`} onClick={()=>setMenuOpen(false)}>
           Book a Consultation

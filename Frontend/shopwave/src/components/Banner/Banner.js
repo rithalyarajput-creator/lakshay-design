@@ -7,7 +7,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // =============================================
 const BACKEND = process.env.REACT_APP_API_URL
   ? process.env.REACT_APP_API_URL.replace('/api', '')
-  : 'https://clicksemrus.com';
+  : 'https://amshine-backend.onrender.com';
 
 const SLIDES = [
   {

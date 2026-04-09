@@ -108,7 +108,7 @@ export default function Orders() {
     const slipHTML = `<html><head><title>Order Slip #${order._id?.slice(-8).toUpperCase()}</title>
       <style>body{font-family:Arial,sans-serif;padding:20px;max-width:600px;margin:0 auto}table{width:100%;border-collapse:collapse}th{background:#f3f4f6;padding:8px;border:1px solid #ddd;text-align:left}.total{font-size:18px;font-weight:bold;text-align:right;margin-top:16px}</style></head>
       <body>
-        <h1>🪙 Amshine Jewellery</h1><hr/>
+        <h1>Amshine Jewellery</h1><hr/>
         <p><strong>Order ID:</strong> #${order._id?.slice(-8).toUpperCase()}</p>
         <p><strong>Customer:</strong> ${order.user?.name || '—'}</p>
         <p><strong>Phone:</strong> ${order.shippingAddress?.phone || '—'}</p>
@@ -119,7 +119,7 @@ export default function Orders() {
         <table><thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
         <tbody>${items}</tbody></table>
         <div class="total">Total: ₹${order.totalAmount?.toLocaleString()}</div>
-        <p style="text-align:center;color:#888;font-size:12px;margin-top:24px">Thank you for shopping with Amshine Jewellery! ✨</p>
+        <p style="text-align:center;color:#888;font-size:12px;margin-top:24px">Thank you for shopping with Amshine Jewellery!</p>
       </body></html>`;
     const win = window.open('', '_blank');
     win.document.write(slipHTML);
@@ -157,10 +157,10 @@ export default function Orders() {
       key: '_id2', label: 'Actions',
       render: (_, row) => (
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-          <button className="btn btn-outline btn-sm" onClick={e => { e.stopPropagation(); openDetail(row); }}>👁 View</button>
-          {row.status === 'pending' && <button className="btn btn-sm" style={{ background: '#10B981', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 }} onClick={e => quickConfirm(row, e)}>✓ Confirm</button>}
-          {row.status !== 'cancelled' && row.status !== 'delivered' && <button className="btn btn-sm" style={{ background: '#EF4444', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 }} onClick={e => quickCancel(row, e)}>✕ Cancel</button>}
-          <button className="btn btn-ghost btn-sm" onClick={e => { e.stopPropagation(); handlePrintSlip(row); }}>🖨️</button>
+          <button className="btn btn-outline btn-sm" onClick={e => { e.stopPropagation(); openDetail(row); }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View</button>
+          {row.status === 'pending' && <button className="btn btn-sm" style={{ background: '#10B981', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 }} onClick={e => quickConfirm(row, e)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> Confirm</button>}
+          {row.status !== 'cancelled' && row.status !== 'delivered' && <button className="btn btn-sm" style={{ background: '#EF4444', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 }} onClick={e => quickCancel(row, e)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel</button>}
+          <button className="btn btn-ghost btn-sm" onClick={e => { e.stopPropagation(); handlePrintSlip(row); }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
         </div>
       )
     },
@@ -205,7 +205,7 @@ export default function Orders() {
 
       {/* Search + Date Filter */}
       <div className="card" style={{ padding: '16px 20px', marginBottom: 16, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-        <input className="form-control" placeholder="🔍 Search by Order ID or customer..." value={search}
+        <input className="form-control" placeholder="Search by Order ID or customer..." value={search}
           onChange={e => { setSearch(e.target.value); setPage(1); }} style={{ width: 280 }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-muted)' }}>
           <span>From:</span>
@@ -229,10 +229,10 @@ export default function Orders() {
         title={`Order #${selectedOrder?._id?.slice(-6).toUpperCase()}`} size="lg"
         footer={
           <>
-            <button className="btn btn-ghost" onClick={() => handlePrintSlip(selectedOrder)}>🖨️ Print Slip</button>
+            <button className="btn btn-ghost" onClick={() => handlePrintSlip(selectedOrder)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print Slip</button>
             <button className="btn btn-ghost" onClick={() => setSelectedOrder(null)}>Close</button>
             <button className="btn btn-primary" onClick={handleStatusUpdate} disabled={saving}>
-              {saving ? <span className="spinner" /> : '💾 Save Status'}
+              {saving ? <span className="spinner" /> : <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Status</>}
             </button>
           </>
         }
@@ -240,7 +240,7 @@ export default function Orders() {
         {selectedOrder && (
           <div className={styles.detailGrid}>
             <div className={styles.detailSection}>
-              <h4 className={styles.detailSectionTitle}>👤 Customer Info</h4>
+              <h4 className={styles.detailSectionTitle}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Customer Info</h4>
               <div className={styles.infoRow}><span>Name</span><span>{selectedOrder.user?.name || '—'}</span></div>
               <div className={styles.infoRow}><span>Email</span><span>{selectedOrder.user?.email || '—'}</span></div>
               <div className={styles.infoRow}><span>Phone</span><span>{selectedOrder.shippingAddress?.phone || '—'}</span></div>
@@ -248,7 +248,7 @@ export default function Orders() {
               <div className={styles.infoRow}><span>Date</span><span>{new Date(selectedOrder.createdAt).toLocaleDateString('en-IN')}</span></div>
             </div>
             <div className={styles.detailSection}>
-              <h4 className={styles.detailSectionTitle}>📦 Items</h4>
+              <h4 className={styles.detailSectionTitle}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Items</h4>
               {(selectedOrder.items || []).map((item, i) => (
                 <div key={i} className={styles.orderItem}>
                   <div className={styles.orderItemInfo}>
@@ -262,7 +262,7 @@ export default function Orders() {
               <div className={`${styles.infoRow} ${styles.totalRow}`}><span>Total</span><strong>₹{(selectedOrder.totalAmount || 0)?.toLocaleString()}</strong></div>
             </div>
             <div className={styles.detailSection} style={{ gridColumn: '1/-1' }}>
-              <h4 className={styles.detailSectionTitle}>🔄 Update Status</h4>
+              <h4 className={styles.detailSectionTitle}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Update Status</h4>
               <div className={styles.statusRow}>
                 {STATUSES.map(s => (
                   <button key={s} onClick={() => setNewStatus(s)}

@@ -67,7 +67,7 @@ const RichEditor = ({ value, onChange }) => {
         style={{ minHeight: 140, padding: '12px 16px', fontSize: 14, lineHeight: 1.8, outline: 'none', background: '#fff', fontFamily: 'Jost, sans-serif' }}
       />
       <div style={{ padding: '6px 12px', background: '#F9FAFB', borderTop: '1px solid var(--border)', fontSize: 11, color: 'var(--text-muted)' }}>
-        💡 <strong>B</strong> = Bold, <strong>H3</strong> = Heading, <strong>• List</strong> = Bullet points
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> <strong>B</strong> = Bold, <strong>H3</strong> = Heading, <strong>• List</strong> = Bullet points
       </div>
     </div>
   );
@@ -87,11 +87,12 @@ const StarInput = ({ value, onChange }) => {
             onMouseEnter={() => setHover(star)}
             onMouseLeave={() => setHover(0)}
             style={{
-              fontSize: 28, cursor: 'pointer',
+              cursor: 'pointer',
               color: star <= (hover || rating) ? '#B8860B' : '#E5E7EB',
               transition: 'color 0.15s',
+              display: 'inline-block',
             }}
-          >★</span>
+          ><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
         ))}
       </div>
       <input
@@ -160,7 +161,7 @@ export default function Products() {
 
   const openAdd = () => { setForm(EMPTY_FORM); setImages([]); setEditProduct(null); setModalOpen(true); };
 
-  const BACKEND_URL = (process.env.REACT_APP_API_URL || 'https://clicksemrus.com/api.php').replace('/api', '');
+  const BACKEND_URL = (process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api').replace('/api', '');
 
   const openEdit = (product) => {
     setEditProduct(product);
@@ -402,7 +403,7 @@ export default function Products() {
       key: 'images', label: 'Image', width: 60,
       render: (val) => (
         <div style={{ width: 44, height: 44, borderRadius: 8, overflow: 'hidden', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {val?.[0] ? <img src={val[0].startsWith('http') ? val[0] : `https://clicksemrus.com${val[0]}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display='none'} /> : <span>📦</span>}
+          {val?.[0] ? <img src={val[0].startsWith('http') ? val[0] : `https://amshine-backend.onrender.com${val[0]}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display='none'} /> : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.3}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>}
         </div>
       )
     },
@@ -414,7 +415,7 @@ export default function Products() {
       key: 'rating', label: 'Rating',
       render: (v, row) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ color: '#B8860B', fontSize: 14 }}>★</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#B8860B" style={{display:'inline-block',verticalAlign:'middle'}}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span style={{ fontWeight: 600, fontSize: 13 }}>{v || 0}</span>
           <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>({row.reviewCount || 0})</span>
         </div>
@@ -445,8 +446,8 @@ export default function Products() {
       key: '_id', label: 'Actions',
       render: (_, row) => (
         <div style={{ display: 'flex', gap: 6 }}>
-          <button className="btn btn-outline btn-sm" onClick={e => { e.stopPropagation(); openEdit(row); }}>✏️ Edit</button>
-          <button className="btn btn-danger btn-sm" onClick={e => { e.stopPropagation(); setDeleteId(row._id); }}>🗑️</button>
+          <button className="btn btn-outline btn-sm" onClick={e => { e.stopPropagation(); openEdit(row); }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
+          <button className="btn btn-danger btn-sm" onClick={e => { e.stopPropagation(); setDeleteId(row._id); }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
         </div>
       )
     },
@@ -460,19 +461,19 @@ export default function Products() {
           <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>{totalProducts} total products</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button className="btn btn-ghost btn-sm" onClick={handleDownloadTemplate}>📥 Template</button>
-          <button className="btn btn-ghost btn-sm" onClick={() => setImportModalOpen(true)}>📤 Import CSV</button>
-          <button className="btn btn-ghost btn-sm" onClick={handleExport}>📊 Export</button>
+          <button className="btn btn-ghost btn-sm" onClick={handleDownloadTemplate}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Template</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setImportModalOpen(true)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Import CSV</button>
+          <button className="btn btn-ghost btn-sm" onClick={handleExport}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Export</button>
           <button className="btn btn-secondary" onClick={() => { setForm(EMPTY_FORM); setImages([]); setEditProduct(null); setImportUrl(''); setUrlModalOpen(true); }}
             style={{ background: '#7C3AED', color: '#fff', border: 'none' }}>
-            🔗 Import from URL
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Import from URL
           </button>
           <button className="btn btn-primary" onClick={openAdd}>＋ Add Product</button>
         </div>
       </div>
 
       <div className="card" style={{ padding: '16px 20px', marginBottom: 20, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <input className="form-control" placeholder="🔍 Search products..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} style={{ width: 260 }} />
+        <input className="form-control" placeholder="Search products..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} style={{ width: 260 }} />
         <select className="form-control" value={catFilter} onChange={e => { setCatFilter(e.target.value); setPage(1); }} style={{ width: 200 }}>
           <option value="">All Categories</option>
           {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
@@ -490,9 +491,9 @@ export default function Products() {
         footer={
           <>
             <button className="btn btn-ghost" onClick={() => setModalOpen(false)}>Cancel</button>
-            <button className="btn btn-ghost" onClick={() => { addToast('Saved as draft', 'success'); setModalOpen(false); }}>💾 Save Draft</button>
+            <button className="btn btn-ghost" onClick={() => { addToast('Saved as draft', 'success'); setModalOpen(false); }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Draft</button>
             <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-              {saving ? <><span className="spinner" /> Saving...</> : (editProduct ? '✅ Update' : '＋ Add Product')}
+              {saving ? <><span className="spinner" /> Saving...</> : (editProduct ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> Update</> : '＋ Add Product')}
             </button>
           </>
         }
@@ -545,13 +546,13 @@ export default function Products() {
 
           {/* Rating */}
           <div className="form-group" style={{ gridColumn: '1/-1' }}>
-            <label className="form-label">⭐ Rating (0-5)</label>
+            <label className="form-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{display:'inline-block',verticalAlign:'middle'}}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Rating (0-5)</label>
             <StarInput value={form.rating} onChange={val => setForm(f => ({ ...f, rating: val }))} />
           </div>
 
           {/* Review Count */}
           <div className="form-group">
-            <label className="form-label">💬 Review Count</label>
+            <label className="form-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Review Count</label>
             <input className="form-control" type="number" min="0" value={form.reviewCount} onChange={e => setForm(f => ({ ...f, reviewCount: e.target.value }))} placeholder="e.g. 120" />
           </div>
 
@@ -560,18 +561,18 @@ export default function Products() {
 
           {/* Marketplace Links */}
           <div className="form-group" style={{ gridColumn: '1/-1' }}>
-            <label className="form-label">🛒 Marketplace Links (optional)</label>
+            <label className="form-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Marketplace Links (optional)</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#FF6B6B', marginBottom: 4 }}>🟥 Meesho</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#FF6B6B', marginBottom: 4 }}><span style={{ display:'inline-block', width:10, height:10, background:'#FF6B6B', borderRadius:2, marginRight:4, verticalAlign:'middle' }} /> Meesho</div>
                 <input className="form-control" value={form.meeshoLink} onChange={e => setForm(f => ({ ...f, meeshoLink: e.target.value }))} placeholder="https://meesho.com/..." />
               </div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#2874F0', marginBottom: 4 }}>🟦 Flipkart</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#2874F0', marginBottom: 4 }}><span style={{ display:'inline-block', width:10, height:10, background:'#2874F0', borderRadius:2, marginRight:4, verticalAlign:'middle' }} /> Flipkart</div>
                 <input className="form-control" value={form.flipkartLink} onChange={e => setForm(f => ({ ...f, flipkartLink: e.target.value }))} placeholder="https://flipkart.com/..." />
               </div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#FF9900', marginBottom: 4 }}>🟧 Amazon</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#FF9900', marginBottom: 4 }}><span style={{ display:'inline-block', width:10, height:10, background:'#FF9900', borderRadius:2, marginRight:4, verticalAlign:'middle' }} /> Amazon</div>
                 <input className="form-control" value={form.amazonLink} onChange={e => setForm(f => ({ ...f, amazonLink: e.target.value }))} placeholder="https://amazon.in/..." />
               </div>
             </div>
@@ -579,7 +580,7 @@ export default function Products() {
 
           {/* Listing Status */}
           <div className="form-group" style={{ gridColumn: '1/-1' }}>
-            <label className="form-label">📊 Listing Status & Visibility</label>
+            <label className="form-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Listing Status & Visibility</label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
               {[
                 { key: 'isActive', label: 'Active', desc: 'Visible to customers', color: '#10B981' },
@@ -616,12 +617,12 @@ export default function Products() {
         }
       >
         <div style={{ textAlign: 'center', padding: '20px 0' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>📤</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.4}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
           <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>Upload a CSV file to import products.</p>
-          <button className="btn btn-ghost btn-sm" onClick={handleDownloadTemplate} style={{ marginBottom: 16 }}>📥 Download Template</button>
+          <button className="btn btn-ghost btn-sm" onClick={handleDownloadTemplate} style={{ marginBottom: 16 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Template</button>
           <input ref={importFileRef} type="file" accept=".csv,.xlsx" style={{ display: 'none' }} />
           <div style={{ border: '2px dashed var(--border)', borderRadius: 12, padding: '24px', cursor: 'pointer' }} onClick={() => importFileRef.current?.click()}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>📁</div>
+            <div style={{ marginBottom: 8 }}><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{opacity:0.4}}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
             <div style={{ fontSize: 14, fontWeight: 600 }}>Click to select CSV file</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Supports .csv and .xlsx</div>
           </div>
@@ -629,12 +630,12 @@ export default function Products() {
       </Modal>
 
       {/* ── Import from URL Modal ── */}
-      <Modal isOpen={urlModalOpen} onClose={() => setUrlModalOpen(false)} title="🔗 Import Product from URL" size="sm"
+      <Modal isOpen={urlModalOpen} onClose={() => setUrlModalOpen(false)} title="Import Product from URL" size="sm"
         footer={
           <>
             <button className="btn btn-ghost" onClick={() => setUrlModalOpen(false)}>Cancel</button>
             <button className="btn btn-primary" onClick={handleFetchUrl} disabled={fetchingUrl}>
-              {fetchingUrl ? <><span className="spinner" /> Fetching...</> : '✨ Fetch & Auto-Fill'}
+              {fetchingUrl ? <><span className="spinner" /> Fetching...</> : <><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Fetch & Auto-Fill</>}
             </button>
           </>
         }

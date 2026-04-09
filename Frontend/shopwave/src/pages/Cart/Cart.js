@@ -5,7 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import AuthModal from '../../components/AuthModal/AuthModal';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'https://clicksemrus.com/api';
+const API_BASE = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
 const Icon = ({ d, size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -317,10 +317,10 @@ const Cart = () => {
 
           {/* Coupon */}
           <div className="cp-section">
-            <div className="cp-sec-title">🎁 Apply Coupon</div>
+            <div className="cp-sec-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg> Apply Coupon</div>
             {couponData ? (
               <div className="cp-csuccess">
-                <div style={{ fontWeight:700, color:'#16a34a', fontSize:14 }}>✓ {couponData.code} — You save ₹{discount.toLocaleString()}</div>
+                <div style={{ fontWeight:700, color:'#16a34a', fontSize:14 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> {couponData.code} — You save ₹{discount.toLocaleString()}</div>
                 <button onClick={() => { setCouponData(null); setCouponCode(''); setCouponError(''); }}
                   style={{ background:'none', border:'none', color:'#9CA3AF', cursor:'pointer', padding:4 }}>
                   <Icon d={IC.x} size={16}/>
@@ -336,7 +336,7 @@ const Cart = () => {
                     {couponLoading ? '...' : 'Apply'}
                   </button>
                 </div>
-                {couponError && <div className="cp-cerr">⚠ {couponError}</div>}
+                {couponError && <div className="cp-cerr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> {couponError}</div>}
               </>
             )}
             {availableCoupons.length > 0 && !couponData && (
@@ -361,7 +361,7 @@ const Cart = () => {
 
           {/* Payment Method */}
           <div className="cp-section">
-            <div className="cp-sec-title">💳 Payment Method</div>
+            <div className="cp-sec-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Payment Method</div>
             <div className="cp-pay-opts">
               {[
                 { v:'COD',    label:'Cash on Delivery', desc:'Pay when delivered', bg:'#F0FDF4', ic:IC.cod },
@@ -383,7 +383,7 @@ const Cart = () => {
 
           {/* Delivery Address */}
           <div className="cp-section">
-            <div className="cp-sec-title">📦 Delivery Address</div>
+            <div className="cp-sec-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Delivery Address</div>
             <div className="cp-addr-grid">
               <div className="cp-field">
                 <label className="cp-flabel">Full Name *</label>

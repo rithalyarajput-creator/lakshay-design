@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const BACKEND = process.env.REACT_APP_API_URL
   ? process.env.REACT_APP_API_URL.replace('/api', '')
-  : 'https://clicksemrus.com';
+  : 'https://amshine-backend.onrender.com';
 
 const getImgUrl = (img) => {
   if (!img) return null;
@@ -18,14 +18,14 @@ const FALLBACK_COLORS = [
 ];
 
 const DEFAULT_CATS = [
-  { name: 'Necklaces',     emoji: '📿', color: '#4A1020' },
-  { name: 'Earrings',      emoji: '💎', color: '#1A3A6A' },
-  { name: 'Rings',         emoji: '💍', color: '#8B2A3A' },
-  { name: 'Bracelets',     emoji: '✨', color: '#2A4A1A' },
-  { name: 'Bangles',       emoji: '🔮', color: '#3A1A4A' },
-  { name: 'Jewelry Sets',  emoji: '👑', color: '#4A3A1A' },
-  { name: 'Bridal Jewelry',emoji: '👸', color: '#2A1A4A' },
-  { name: 'Mangalsutra',   emoji: '❤️', color: '#1A4A3A' },
+  { name: 'Necklaces',     color: '#4A1020' },
+  { name: 'Earrings',      color: '#1A3A6A' },
+  { name: 'Rings',         color: '#8B2A3A' },
+  { name: 'Bracelets',     color: '#2A4A1A' },
+  { name: 'Bangles',       color: '#3A1A4A' },
+  { name: 'Jewelry Sets',  color: '#4A3A1A' },
+  { name: 'Bridal Jewelry',color: '#2A1A4A' },
+  { name: 'Mangalsutra',   color: '#1A4A3A' },
 ];
 
 const CategorySection = ({ categories = [] }) => {
@@ -35,7 +35,6 @@ const CategorySection = ({ categories = [] }) => {
     ? categories.map((c, i) => ({
         name: c.name,
         image: getImgUrl(c.image),
-        emoji: c.emoji || '💍',
         slug: c.name,
         color: FALLBACK_COLORS[i % FALLBACK_COLORS.length],
       }))
@@ -75,7 +74,7 @@ const CategorySection = ({ categories = [] }) => {
 
         {/* Scrollable Row */}
         <div ref={sliderRef} style={{
-          display:'flex', gap:'32px', overflowX:'auto', scrollSnapType:'x mandatory', justifyContent: cats.length <= 5 ? 'center' : 'flex-start',
+          display:'flex', gap:'32px', overflowX:'auto', scrollSnapType:'x mandatory',
           scrollbarWidth:'none', msOverflowStyle:'none', padding:'8px 4px 16px',
         }}>
           <style>{`.cat-slider::-webkit-scrollbar{display:none;}`}</style>
@@ -94,7 +93,7 @@ const CategorySection = ({ categories = [] }) => {
                     : { background: cat.color }
                   }
                 >
-                  {!cat.image && <span className="cat-circle-emoji">{cat.emoji}</span>}
+                  {!cat.image && <span className="cat-circle-emoji"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 3h12l4 6-10 13L2 9 6 3z"/><path d="M11 3L8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg></span>}
                   <div className="cat-circle-overlay"/>
                 </div>
               </div>
