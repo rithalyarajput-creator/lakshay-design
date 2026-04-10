@@ -19,7 +19,7 @@ const PHOTO_GRID = [
 ];
 
 const PhotoGrid = () => (
-  <section style={{ background: '#fff', padding: '0' }}>
+  <section style={{ background: '#fff', padding: '0' }} className="pg-section">
     <style>{`
       .pg-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; max-width: 100%; }
       .pg-left  { grid-row: span 2; overflow: hidden; }
@@ -31,11 +31,7 @@ const PhotoGrid = () => (
       }
       .pg-cell:hover img { transform: scale(1.06); }
       .pg-left  .pg-cell img { height: 100%; }
-      @media(max-width:600px){
-        .pg-wrap { grid-template-columns: 1fr 1fr; }
-        .pg-left { grid-row: span 1; }
-        .pg-right { grid-column: 1 / -1; }
-      }
+      @media(max-width:768px){ .pg-section { display: none; } }
     `}</style>
     <div className="pg-wrap">
       {/* Left — tall single image */}
