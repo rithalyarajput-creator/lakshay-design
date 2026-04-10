@@ -1,9 +1,7 @@
 # Lakshay Design — Amshine Jewellery E-Commerce
 
 > **Live Site:** [https://clicksemrus.com](https://clicksemrus.com)
-> **Admin Panel:** [https://clicksemrus.com/admin](https://clicksemrus.com/admin)
-
-![Deploy](https://github.com/rithalyarajput-creator/lakshay-design/actions/workflows/deploy.yml/badge.svg)
+> **Admin Panel:** [https://clicksemrus.com/jaan](https://clicksemrus.com/jaan)
 
 ---
 
@@ -17,6 +15,9 @@ A full-stack e-commerce web application for **Amshine Jewellery** — built with
 - Blog system with publish/unpublish control
 - Newsletter subscription management
 - Import products directly from Meesho URL (title auto-filled from URL)
+- CMS Pages — edit Privacy Policy, Shipping Policy, Terms, Return Policy, About, Contact
+- 5-image photo grid section on homepage (desktop only)
+- PHP Watchdog — auto-restarts backend if it goes down (every 5 minutes)
 - Fully mobile-responsive design
 - BIS Hallmarked product catalog with image uploads
 
@@ -36,12 +37,12 @@ lakshay-design/
 │   │   │   ├── HomeFAQs/         # FAQ accordion on homepage
 │   │   │   └── Navbar/           # Top navigation with search
 │   │   ├── pages/
-│   │   │   ├── Home/             # Homepage (WhyChooseUs + BlogPreview)
+│   │   │   ├── Home/             # Homepage (PhotoGrid + WhyChooseUs + BlogPreview)
 │   │   │   ├── Products/         # Product listing with filters
 │   │   │   ├── ProductDetail/    # Product detail page
 │   │   │   ├── Blog/             # Blog listing page
 │   │   │   ├── Blog/BlogPost.js  # Blog post detail page
-│   │   │   ├── Cart/             # Shopping cart
+│   │   │   ├── Cart/             # Shopping cart + checkout (10-digit phone validation)
 │   │   │   ├── About/            # About us page
 │   │   │   └── Contact/          # Contact form
 │   │   ├── context/              # Auth & Cart context (React Context)
@@ -62,12 +63,12 @@ lakshay-design/
 │   │   │   ├── Testimonials/     # Customer reviews
 │   │   │   ├── Subscriptions/    # Newsletter subscribers
 │   │   │   ├── Blog/             # Blog post management
-│   │   │   ├── CMS/              # CMS pages (privacy, shipping, etc.)
+│   │   │   ├── CMS/              # CMS pages (privacy, shipping, terms, about, contact)
 │   │   │   ├── HomePage/         # Banner & homepage content editor
 │   │   │   └── Settings/         # Admin settings
 │   │   ├── components/           # Table, Modal, Sidebar, Toast, ImageUpload
 │   │   └── api/axios.js          # Axios instance (baseURL: clicksemrus.com/api)
-│   └── package.json              # homepage: "/admin" (served from /admin path)
+│   └── package.json              # homepage: "/jaan" (served from /jaan path)
 │
 ├── beckend/beckend/              # Node.js + Express API
 │   ├── models/                   # Mongoose models
@@ -83,7 +84,9 @@ lakshay-design/
 │   │   ├── couponRoutes.js
 │   │   ├── scrapeRoutes.js       # Meesho/Amazon URL import
 │   │   ├── newsletterRoutes.js   # Newsletter subscribe/unsubscribe
-│   │   └── blogRoutes.js         # Blog CRUD with slug generation
+│   │   ├── blogRoutes.js         # Blog CRUD with slug generation
+│   │   ├── otpRoutes.js          # OTP send/verify (Fast2SMS — needs recharge)
+│   │   └── cmsRoutes.js          # CMS page content (MongoDB backed)
 │   ├── middleware/auth.js        # JWT protect + admin middleware
 │   └── server.js
 │
@@ -139,11 +142,13 @@ cat /home/u518768974/deploy.log
 
 ## Admin Panel
 
-| Detail   | Value                             |
-|----------|-----------------------------------|
-| URL      | https://clicksemrus.com/admin     |
-| Email    | admin@amshine.com                 |
-| Password | Admin@123                         |
+| Detail   | Value                              |
+|----------|------------------------------------|
+| URL      | https://clicksemrus.com/jaan       |
+| Email    | admin@amshine.com                  |
+| Password | Admin@123                          |
+
+> **Note:** Old URL `/admin` is blocked and redirects to homepage.
 
 ### Admin Features
 
@@ -160,7 +165,7 @@ cat /home/u518768974/deploy.log
 | **Testimonials** | Customer reviews management |
 | **Subscriptions** | Newsletter subscriber list |
 | **Blog** | Create/edit/publish blog posts with tags, images, read time |
-| **CMS Pages** | Edit Privacy Policy, Shipping Policy, Terms, Return Policy |
+| **CMS Pages** | Edit Privacy Policy, Shipping Policy, Terms, Return Policy, About, Contact |
 | **Home Page** | Manage homepage banners and content |
 | **Settings** | Admin account settings |
 
@@ -221,11 +226,21 @@ Base URL: `https://clicksemrus.com/api`
 | PUT | /blog/:id | Update post (admin) |
 | DELETE | /blog/:id | Delete post (admin) |
 
+### CMS Pages
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /cms/:slug | Get page content (public) |
+| POST | /cms/:slug | Save page content (admin) |
+
+Slugs: `about`, `contact`, `privacy-policy`, `shipping-policy`, `return-policy`, `terms-of-service`
+
 ### Other
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | /leads | Submit enquiry/lead |
 | POST | /scrape | Import product from URL (Meesho) |
+| POST | /otp/send | Send OTP to phone (Fast2SMS) |
+| POST | /otp/verify | Verify OTP |
 | GET | /health | Backend health check |
 
 ---
@@ -244,6 +259,7 @@ Base URL: `https://clicksemrus.com/api`
 | `Testimonial` | Customer reviews with ratings |
 | `Newsletter` | Email subscribers (isActive toggle) |
 | `Blog` | Blog posts — title, slug, content, tags, isPublished, readTime |
+| `CmsPage` | CMS page content — slug, title, content (HTML), contactInfo |
 
 ---
 
@@ -257,10 +273,22 @@ Base URL: `https://clicksemrus.com/api`
 | Domain | clicksemrus.com |
 | Node.js path | /opt/alt/alt-nodejs20/root/usr/bin/node |
 | Backend dir | /home/u518768974/api_backend |
-| Repo dir | /home/u518768974/ecommerce-template |
 | Public HTML | /home/u518768974/domains/clicksemrus.com/public_html |
-| Admin dir | /home/u518768974/domains/clicksemrus.com/public_html/admin |
+| Admin dir | /home/u518768974/domains/clicksemrus.com/public_html/jaan |
 | Process manager | PM2 (app: amshine-backend, port: 3000) |
+
+### Backend Auto-Restart (Watchdog)
+
+Backend is protected by a PHP watchdog that runs every 5 minutes via hPanel cron:
+
+```
+*/5 * * * * /home/u518768974/watchdog.sh
+```
+
+- Checks `curl http://localhost:3000/api/health`
+- If down → runs `pm2 restart all` automatically
+- Max downtime = 5 minutes
+- Logs at `/home/u518768974/watchdog.log`
 
 ### How Apache → Node.js works
 
@@ -276,31 +304,22 @@ Node.js :3000 (PM2)
 MongoDB Atlas
 ```
 
-The `.htaccess` catches all API route patterns and passes them to `api.php`, which forwards to `localhost:3000`.
-
 ### PM2 Commands (SSH)
 ```bash
-pm2 status                          # check if running
-pm2 reload amshine-backend          # reload without downtime
-pm2 start ecosystem.config.js       # start if not running
-pm2 save                            # save process list
-pm2 logs amshine-backend            # view live logs
+/home/u518768974/.npm-global/bin/pm2 status
+/home/u518768974/.npm-global/bin/pm2 restart all
+/home/u518768974/.npm-global/bin/pm2 logs --lines 50
 ```
 
 ---
 
 ## Local Development
 
-### Prerequisites
-- Node.js 18+
-- npm
-
 ### Run Frontend
 ```bash
 cd Frontend/shopwave
 npm install
 REACT_APP_API_URL=https://clicksemrus.com/api npm start
-# http://localhost:3000
 ```
 
 ### Run Admin
@@ -308,7 +327,6 @@ REACT_APP_API_URL=https://clicksemrus.com/api npm start
 cd admin/admin
 npm install
 REACT_APP_API_URL=https://clicksemrus.com/api npm start
-# http://localhost:3001
 ```
 
 ### Build for Production
@@ -317,7 +335,7 @@ REACT_APP_API_URL=https://clicksemrus.com/api npm start
 cd Frontend/shopwave
 REACT_APP_API_URL=https://clicksemrus.com/api npm run build
 
-# Admin (must set homepage to /admin in package.json)
+# Admin (homepage must be "/jaan" in package.json)
 cd admin/admin
 REACT_APP_API_URL=https://clicksemrus.com/api npm run build
 ```
@@ -338,6 +356,7 @@ NODE_ENV=production
 MONGODB_URI=mongodb+srv://...@cluster0.oitjdhr.mongodb.net/ecommerce
 JWT_SECRET=supersecretjwt2024ecommerce
 JWT_EXPIRE=7d
+FAST2SMS_API_KEY=your_key_here   # needs ₹100 recharge at fast2sms.com
 ```
 
 ---
