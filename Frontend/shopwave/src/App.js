@@ -16,43 +16,164 @@ import BlogPost from './pages/Blog/BlogPost';
 const API = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
 // ── Festival Theme ─────────────────────────────────────────────
-// TO CHANGE: edit FESTIVAL below. Set active:false to hide completely.
+// Set active:false to disable. Change text/link for next festival.
 const FESTIVAL = {
   active: true,
-  text: '🌾 Happy Baisakhi — Celebrate with Amshine Jewellery',
+  text: 'Wishing You a Joyful Baisakhi',
+  sub: 'Celebrate the Golden Harvest with Amshine Jewellery',
   link: '/products',
+  cta: 'Shop Festive Collection',
 };
 
 const FestivalTheme = () => {
   const [closed, setClosed] = useState(() => sessionStorage.getItem('fest_closed') === '1');
   if (!FESTIVAL.active || closed) return null;
+
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, height: 36, zIndex: 9999,
-      background: 'linear-gradient(90deg,#b8500a 0%,#d4750a 40%,#e8a020 60%,#d4750a 80%,#b8500a 100%)',
-      backgroundSize: '200% 100%',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: 12, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase',
-      color: '#fff5e0', gap: 12,
-    }}>
+    <>
       <style>{`
-        @keyframes festShimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
-        .fest-bar { animation: festShimmer 4s linear infinite; }
+        @keyframes goldShine {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes twinkle {
+          0%,100% { opacity: 0.15; transform: scale(0.8); }
+          50%      { opacity: 0.9;  transform: scale(1.2); }
+        }
+        @keyframes sway {
+          0%,100% { transform: rotate(-6deg) translateY(0); }
+          50%      { transform: rotate(6deg) translateY(-6px); }
+        }
+        @keyframes fadeInBanner {
+          from { opacity:0; transform:translateY(-100%); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        .fest-shine {
+          background: linear-gradient(90deg,
+            #7a3a00 0%, #c8740a 20%, #f0c040 40%,
+            #fde97a 50%, #f0c040 60%, #c8740a 80%, #7a3a00 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: goldShine 3s linear infinite;
+        }
+        .fest-cta:hover { background: rgba(255,255,255,0.25) !important; }
       `}</style>
-      <a href={FESTIVAL.link} className="fest-bar" style={{
-        color: 'inherit', textDecoration: 'none', flex: 1, textAlign: 'center',
-        background: 'inherit', backgroundSize: 'inherit', backgroundClip: 'text',
-        WebkitBackgroundClip: 'unset',
+
+      {/* ── Top Banner ── */}
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, height: 36, zIndex: 9999,
+        background: 'linear-gradient(90deg, #1a0800 0%, #4a1800 20%, #2d0f00 50%, #4a1800 80%, #1a0800 100%)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,
+        animation: 'fadeInBanner 0.6s ease',
+        borderBottom: '1px solid rgba(212,175,55,0.3)',
+        overflow: 'hidden',
       }}>
-        {FESTIVAL.text}
-      </a>
-      <button onClick={() => { setClosed(true); sessionStorage.setItem('fest_closed','1'); }}
-        style={{
-          position: 'absolute', right: 10,
-          background: 'none', border: 'none', color: '#fff5e0',
-          cursor: 'pointer', fontSize: 16, lineHeight: 1, opacity: 0.75, padding: '4px 6px',
-        }}>×</button>
-    </div>
+        {/* Shimmer sweep overlay */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'linear-gradient(105deg, transparent 40%, rgba(255,220,100,0.08) 50%, transparent 60%)',
+          backgroundSize: '200% 100%',
+          animation: 'goldShine 2.5s linear infinite',
+        }}/>
+
+        {/* Decorative left divider */}
+        <span style={{ color: 'rgba(212,175,55,0.5)', fontSize: 10, letterSpacing: 3 }}>✦ ✦ ✦</span>
+
+        <a href={FESTIVAL.link} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 14 }}>
+          <span className="fest-shine" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '2.5px', textTransform: 'uppercase' }}>
+            🌾 {FESTIVAL.text}
+          </span>
+          <span style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase',
+            color: '#1a0800', background: 'linear-gradient(135deg,#d4af37,#f0c040)',
+            padding: '3px 12px', borderRadius: 2,
+          }} className="fest-cta">
+            {FESTIVAL.cta} →
+          </span>
+        </a>
+
+        <span style={{ color: 'rgba(212,175,55,0.5)', fontSize: 10, letterSpacing: 3 }}>✦ ✦ ✦</span>
+
+        <button onClick={() => { setClosed(true); sessionStorage.setItem('fest_closed','1'); }}
+          style={{
+            position: 'absolute', right: 12, background: 'none', border: 'none',
+            color: 'rgba(212,175,55,0.6)', cursor: 'pointer', fontSize: 15, lineHeight: 1,
+            padding: '4px 6px',
+          }}>×</button>
+      </div>
+
+      {/* ── Corner Decorations (pointer-events:none, never blocks content) ── */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 100 }}>
+
+        {/* Bottom-left marigold cluster */}
+        <svg style={{ position:'absolute', bottom: 0, left: 0, width: 180, height: 180, opacity: 0.18 }}
+          viewBox="0 0 180 180" fill="none">
+          {/* Wheat stalks */}
+          {[20,35,50,65].map((x,i) => (
+            <g key={i} style={{ animation: `sway ${2+i*0.3}s ease-in-out infinite`, transformOrigin: `${x}px 180px` }}>
+              <line x1={x} y1={180} x2={x-10+i*5} y2={80} stroke="#d4a017" strokeWidth="2"/>
+              <ellipse cx={x-10+i*5} cy={72} rx={6} ry={14} fill="#d4a017" transform={`rotate(-15,${x-10+i*5},72)`}/>
+              <ellipse cx={x-14+i*5} cy={68} rx={4} ry={10} fill="#e8b820" transform={`rotate(-35,${x-14+i*5},68)`}/>
+              <ellipse cx={x-6+i*5} cy={66} rx={4} ry={10} fill="#e8b820" transform={`rotate(5,${x-6+i*5},66)`}/>
+            </g>
+          ))}
+          {/* Marigold flowers */}
+          {[[30,140],[60,120],[15,110]].map(([cx,cy],i) => (
+            <g key={i}>
+              {[0,45,90,135,180,225,270,315].map(deg => (
+                <ellipse key={deg} cx={cx} cy={cy} rx={7} ry={12}
+                  fill={i===1?'#e8820a':'#f0a020'}
+                  transform={`rotate(${deg},${cx},${cy})`} opacity="0.9"/>
+              ))}
+              <circle cx={cx} cy={cy} r={5} fill="#f5c842"/>
+            </g>
+          ))}
+        </svg>
+
+        {/* Bottom-right mirror */}
+        <svg style={{ position:'absolute', bottom: 0, right: 0, width: 180, height: 180, opacity: 0.18, transform:'scaleX(-1)' }}
+          viewBox="0 0 180 180" fill="none">
+          {[20,35,50,65].map((x,i) => (
+            <g key={i} style={{ animation: `sway ${2.2+i*0.3}s ease-in-out infinite`, transformOrigin: `${x}px 180px` }}>
+              <line x1={x} y1={180} x2={x-10+i*5} y2={80} stroke="#d4a017" strokeWidth="2"/>
+              <ellipse cx={x-10+i*5} cy={72} rx={6} ry={14} fill="#d4a017" transform={`rotate(-15,${x-10+i*5},72)`}/>
+              <ellipse cx={x-14+i*5} cy={68} rx={4} ry={10} fill="#e8b820" transform={`rotate(-35,${x-14+i*5},68)`}/>
+              <ellipse cx={x-6+i*5} cy={66} rx={4} ry={10} fill="#e8b820" transform={`rotate(5,${x-6+i*5},66)`}/>
+            </g>
+          ))}
+          {[[30,140],[60,120],[15,110]].map(([cx,cy],i) => (
+            <g key={i}>
+              {[0,45,90,135,180,225,270,315].map(deg => (
+                <ellipse key={deg} cx={cx} cy={cy} rx={7} ry={12}
+                  fill={i===1?'#e8820a':'#f0a020'}
+                  transform={`rotate(${deg},${cx},${cy})`} opacity="0.9"/>
+              ))}
+              <circle cx={cx} cy={cy} r={5} fill="#f5c842"/>
+            </g>
+          ))}
+        </svg>
+
+        {/* Twinkling sparkles — edges only */}
+        {[
+          {x:'3%',  y:'25%', d:1.2}, {x:'96%', y:'30%', d:1.8},
+          {x:'5%',  y:'60%', d:2.1}, {x:'94%', y:'65%', d:1.5},
+          {x:'8%',  y:'80%', d:1.0}, {x:'92%', y:'75%', d:2.3},
+          {x:'50%', y:'92%', d:1.6}, {x:'20%', y:'88%', d:1.9},
+          {x:'75%', y:'85%', d:1.3},
+        ].map((s,i) => (
+          <div key={i} style={{
+            position: 'absolute', left: s.x, top: s.y,
+            width: 6, height: 6, borderRadius: '50%',
+            background: 'radial-gradient(circle, #fde97a, #d4a017)',
+            boxShadow: '0 0 6px 3px rgba(212,175,55,0.6)',
+            animation: `twinkle ${s.d}s ease-in-out infinite`,
+            animationDelay: `${i*0.25}s`,
+          }}/>
+        ))}
+      </div>
+    </>
   );
 };
 
