@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -16,102 +16,43 @@ import BlogPost from './pages/Blog/BlogPost';
 const API = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
 // ── Festival Theme ─────────────────────────────────────────────
-// TO CHANGE FESTIVAL: update FESTIVAL object below
-// Set active:false to disable, or change name/colors/particles
+// TO CHANGE: edit FESTIVAL below. Set active:false to hide completely.
 const FESTIVAL = {
   active: true,
-  name: 'Baisakhi',
-  banner: '🌾 Happy Baisakhi! Celebrate the harvest with Amshine Jewellery — Shop Now',
-  bannerLink: '/products',
-  colors: { bg: 'linear-gradient(90deg,#d4750a,#e8a020,#d4750a)', text: '#fff' },
-  particles: ['🌸','✨','🌼','🌾','💛'],
-  count: 18,
+  text: '🌾 Happy Baisakhi — Celebrate with Amshine Jewellery',
+  link: '/products',
 };
 
 const FestivalTheme = () => {
   const [closed, setClosed] = useState(() => sessionStorage.getItem('fest_closed') === '1');
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    if (!FESTIVAL.active) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-    const onResize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
-    window.addEventListener('resize', onResize);
-
-    const emojis = FESTIVAL.particles;
-    const particles = Array.from({ length: FESTIVAL.count }, (_, i) => ({
-      x: Math.random() * W,
-      y: Math.random() * -H,
-      size: 14 + Math.random() * 14,
-      speed: 0.6 + Math.random() * 1.2,
-      drift: (Math.random() - 0.5) * 0.6,
-      rot: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.04,
-      emoji: emojis[i % emojis.length],
-      opacity: 0.55 + Math.random() * 0.45,
-    }));
-
-    let raf;
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      particles.forEach(p => {
-        ctx.save();
-        ctx.globalAlpha = p.opacity;
-        ctx.font = `${p.size}px serif`;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.fillText(p.emoji, -p.size / 2, p.size / 2);
-        ctx.restore();
-        p.y += p.speed;
-        p.x += p.drift;
-        p.rot += p.rotSpeed;
-        if (p.y > H + 30) { p.y = -30; p.x = Math.random() * W; }
-      });
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); };
-  }, []);
-
-  if (!FESTIVAL.active) return null;
-
+  if (!FESTIVAL.active || closed) return null;
   return (
-    <>
-      {/* Falling particles canvas */}
-      <canvas ref={canvasRef} style={{
-        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-        pointerEvents: 'none', zIndex: 9998,
-      }} />
-
-      {/* Festival top banner */}
-      {!closed && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
-          background: FESTIVAL.colors.bg, color: FESTIVAL.colors.text,
-          padding: '9px 48px 9px 16px', textAlign: 'center',
-          fontSize: 13, fontWeight: 600, letterSpacing: '0.3px',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
-          animation: 'festSlide 0.5s ease',
-        }}>
-          <style>{`
-            @keyframes festSlide { from{transform:translateY(-100%)} to{transform:translateY(0)} }
-          `}</style>
-          <a href={FESTIVAL.bannerLink} style={{ color: 'inherit', textDecoration: 'none' }}>
-            {FESTIVAL.banner}
-          </a>
-          <button onClick={() => { setClosed(true); sessionStorage.setItem('fest_closed','1'); }}
-            style={{
-              position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-              background: 'none', border: 'none', color: 'inherit', cursor: 'pointer',
-              fontSize: 18, lineHeight: 1, opacity: 0.8, padding: '0 4px',
-            }}>×</button>
-        </div>
-      )}
-    </>
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, height: 36, zIndex: 9999,
+      background: 'linear-gradient(90deg,#b8500a 0%,#d4750a 40%,#e8a020 60%,#d4750a 80%,#b8500a 100%)',
+      backgroundSize: '200% 100%',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: 12, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase',
+      color: '#fff5e0', gap: 12,
+    }}>
+      <style>{`
+        @keyframes festShimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+        .fest-bar { animation: festShimmer 4s linear infinite; }
+      `}</style>
+      <a href={FESTIVAL.link} className="fest-bar" style={{
+        color: 'inherit', textDecoration: 'none', flex: 1, textAlign: 'center',
+        background: 'inherit', backgroundSize: 'inherit', backgroundClip: 'text',
+        WebkitBackgroundClip: 'unset',
+      }}>
+        {FESTIVAL.text}
+      </a>
+      <button onClick={() => { setClosed(true); sessionStorage.setItem('fest_closed','1'); }}
+        style={{
+          position: 'absolute', right: 10,
+          background: 'none', border: 'none', color: '#fff5e0',
+          cursor: 'pointer', fontSize: 16, lineHeight: 1, opacity: 0.75, padding: '4px 6px',
+        }}>×</button>
+    </div>
   );
 };
 
