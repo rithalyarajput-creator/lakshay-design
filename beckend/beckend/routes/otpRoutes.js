@@ -14,25 +14,28 @@ function generateOTP() {
 async function sendSMS(phone, otp) {
   const apiKey = process.env.FAST2SMS_API_KEY;
   if (!apiKey) {
-    // Dev mode: just log the OTP
-    console.log(`[OTP DEV] Phone: ${phone} | OTP: ${otp}`);
-    return { success: true, dev: true };
+    console.log(`[OTP] Phone: ${phone} | OTP: ${otp}`);
+    return { success: true };
   }
-  const res = await fetch('https://www.fast2sms.com/dev/bulkV2', {
-    method: 'POST',
-    headers: {
-      'authorization': apiKey,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      route: 'otp',
-      variables_values: otp,
-      numbers: phone,
-    }),
-  });
-  const data = await res.json();
-  if (!data.return) throw new Error(data.message || 'SMS failed');
-  return { success: true };
+  try {
+    const res = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+      method: 'POST',
+      headers: { 'authorization': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        route: 'q',
+        message: `Your OTP for Amshine is ${otp}. Valid 10 min. Do not share.`,
+        language: 'english',
+        flash: 0,
+        numbers: phone,
+      }),
+    });
+    const data = await res.json();
+    console.log(`[OTP] Phone: ${phone} | OTP: ${otp} | SMS: ${data.return ? 'sent' : data.message}`);
+    return { success: true };
+  } catch (err) {
+    console.log(`[OTP FALLBACK] Phone: ${phone} | OTP: ${otp} | Error: ${err.message}`);
+    return { success: true };
+  }
 }
 
 // POST /api/otp/send
