@@ -19,18 +19,17 @@ const PHOTO_GRID = [
 ];
 
 const PhotoGrid = () => (
-  <section style={{ background: '#fff', padding: '0' }} className="pg-section">
+  <section style={{ background: '#fff', padding: '24px clamp(16px,4vw,48px)' }} className="pg-section">
     <style>{`
-      .pg-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; max-width: 100%; }
-      .pg-left  { grid-row: span 2; overflow: hidden; }
-      .pg-right { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-      .pg-cell  { overflow: hidden; cursor: pointer; display: block; }
+      .pg-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; max-width: 1100px; margin: 0 auto; height: 340px; }
+      .pg-left  { grid-row: span 2; overflow: hidden; height: 340px; }
+      .pg-right { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3px; height: 340px; }
+      .pg-cell  { overflow: hidden; cursor: pointer; display: block; height: 100%; }
       .pg-cell img {
         width: 100%; height: 100%; object-fit: cover; display: block;
         transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
       }
       .pg-cell:hover img { transform: scale(1.06); }
-      .pg-left  .pg-cell img { height: 100%; }
       @media(max-width:768px){ .pg-section { display: none; } }
     `}</style>
     <div className="pg-wrap">
@@ -44,7 +43,7 @@ const PhotoGrid = () => (
       {/* Right — 2×2 grid */}
       <div className="pg-right">
         {PHOTO_GRID.slice(1).map(img => (
-          <Link key={img.id} to={img.link} className="pg-cell" style={{ aspectRatio: '1/1' }}>
+          <Link key={img.id} to={img.link} className="pg-cell">
             <img src={img.src} alt="jewellery"
               onError={e => { e.target.src = 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80'; }} />
           </Link>
