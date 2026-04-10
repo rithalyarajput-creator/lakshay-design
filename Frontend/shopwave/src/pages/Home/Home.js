@@ -8,6 +8,56 @@ import Footer from '../../components/Footer/Footer';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'https://amshine-backend.onrender.com/api';
 
+// ── Photo Grid Section ───────────────────────────────────────
+// TO CHANGE IMAGES: update the src values below (IMAGE_1 through IMAGE_5)
+const PHOTO_GRID = [
+  { id: 1, src: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=1200&q=80', link: '/products' },  // IMAGE_1 — large left
+  { id: 2, src: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',  link: '/products' },  // IMAGE_2 — top center
+  { id: 3, src: 'https://images.unsplash.com/photo-1573408301185-9519f94815b6?w=800&q=80',  link: '/products' },  // IMAGE_3 — top right
+  { id: 4, src: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',  link: '/products' },  // IMAGE_4 — bottom center
+  { id: 5, src: 'https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=800&q=80',  link: '/products' },  // IMAGE_5 — bottom right
+];
+
+const PhotoGrid = () => (
+  <section style={{ background: '#fff', padding: '0' }}>
+    <style>{`
+      .pg-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; max-width: 100%; }
+      .pg-left  { grid-row: span 2; overflow: hidden; }
+      .pg-right { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+      .pg-cell  { overflow: hidden; cursor: pointer; display: block; }
+      .pg-cell img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+      }
+      .pg-cell:hover img { transform: scale(1.06); }
+      .pg-left  .pg-cell img { height: 100%; }
+      @media(max-width:600px){
+        .pg-wrap { grid-template-columns: 1fr 1fr; }
+        .pg-left { grid-row: span 1; }
+        .pg-right { grid-column: 1 / -1; }
+      }
+    `}</style>
+    <div className="pg-wrap">
+      {/* Left — tall single image */}
+      <div className="pg-left">
+        <Link to={PHOTO_GRID[0].link} className="pg-cell" style={{ height: '100%' }}>
+          <img src={PHOTO_GRID[0].src} alt="jewellery collection"
+            onError={e => { e.target.src = 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80'; }} />
+        </Link>
+      </div>
+      {/* Right — 2×2 grid */}
+      <div className="pg-right">
+        {PHOTO_GRID.slice(1).map(img => (
+          <Link key={img.id} to={img.link} className="pg-cell" style={{ aspectRatio: '1/1' }}>
+            <img src={img.src} alt="jewellery"
+              onError={e => { e.target.src = 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80'; }} />
+          </Link>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 // ── Why Choose Us Section ────────────────────────────────────
 const WHY_ITEMS = [
   {
@@ -577,6 +627,7 @@ const Home = () => {
     <div>
       <Banner/>
       <CategorySection categories={categories}/>
+      <PhotoGrid />
       <FeaturedProducts products={products} loading={loading}/>
 
       {/* Jewelry Animated Showcase */}
