@@ -36,6 +36,12 @@ const Cart = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', address: '', pincode: '', city: '', state: '' });
   const [formErr, setFormErr] = useState({});
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpValue, setOtpValue] = useState('');
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const [otpTimer, setOtpTimer] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [couponCode, setCouponCode] = useState('');
   const [couponData, setCouponData] = useState(null);
@@ -54,10 +60,56 @@ const Cart = () => {
       .catch(() => {});
   }, []);
 
+  const isValidPhone = (p) => /^\d{10}$/.test(p.trim());
+
+  const handlePhoneChange = (val) => {
+    const digits = val.replace(/\D/g, '').slice(0, 10);
+    setForm(v => ({ ...v, phone: digits }));
+    if (phoneVerified) { setPhoneVerified(false); setOtpSent(false); setOtpValue(''); setOtpError(''); }
+  };
+
+  const sendOtp = async () => {
+    if (!isValidPhone(form.phone)) return;
+    setOtpLoading(true); setOtpError('');
+    try {
+      const res = await fetch(`${API_BASE}/otp/send`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setOtpSent(true); setOtpValue(''); setOtpTimer(30);
+        const interval = setInterval(() => setOtpTimer(t => { if (t <= 1) { clearInterval(interval); return 0; } return t - 1; }), 1000);
+      } else {
+        setOtpError(data.message || 'Failed to send OTP');
+      }
+    } catch { setOtpError('Server error. Try again.'); }
+    finally { setOtpLoading(false); }
+  };
+
+  const verifyOtp = async () => {
+    if (otpValue.length !== 6) { setOtpError('Enter 6-digit OTP'); return; }
+    setOtpLoading(true); setOtpError('');
+    try {
+      const res = await fetch(`${API_BASE}/otp/verify`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone.trim(), otp: otpValue }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPhoneVerified(true); setOtpSent(false); setOtpError('');
+      } else {
+        setOtpError(data.message || 'Invalid OTP');
+      }
+    } catch { setOtpError('Server error. Try again.'); }
+    finally { setOtpLoading(false); }
+  };
+
   const validate = () => {
     const err = {};
     if (!form.name.trim()) err.name = 'Name required';
-    if (!form.phone.trim() || form.phone.length < 10) err.phone = 'Valid phone required';
+    if (!isValidPhone(form.phone)) err.phone = 'Enter exactly 10-digit mobile number';
+    else if (!phoneVerified) err.phone = 'Please verify your phone number with OTP';
     if (!form.address.trim()) err.address = 'Address required';
     if (!form.pincode.trim() || form.pincode.length < 6) err.pincode = 'Valid pincode required';
     if (!form.city.trim()) err.city = 'City required';
@@ -225,6 +277,19 @@ const Cart = () => {
         .cp-finput:focus{border-color:var(--gold);background:#fff;}
         .cp-finput.err{border-color:#EF4444;}
         .cp-ferr{font-size:11px;color:#EF4444;}
+        /* OTP */
+        .otp-row{display:flex;gap:8px;margin-top:6px;}
+        .otp-input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:15px;font-family:monospace;letter-spacing:6px;text-align:center;outline:none;background:#FDFAF5;transition:border .2s;}
+        .otp-input:focus{border-color:var(--gold);background:#fff;}
+        .otp-send-btn{padding:9px 16px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .2s;}
+        .otp-send-btn:hover:not(:disabled){background:#7a1520;}
+        .otp-send-btn:disabled{opacity:.6;cursor:not-allowed;}
+        .otp-verify-btn{padding:9px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s;}
+        .otp-verify-btn:hover:not(:disabled){background:#15803d;}
+        .otp-verify-btn:disabled{opacity:.6;cursor:not-allowed;}
+        .otp-verified{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#16a34a;margin-top:5px;}
+        .otp-err{font-size:11px;color:#EF4444;margin-top:4px;}
+        .otp-hint{font-size:11px;color:#9CA3AF;margin-top:4px;}
         /* Total & Place Order */
         .cp-total-row{display:flex;justify-content:space-between;font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:20px;align-items:center;}
         .cp-total-row span:last-child{color:var(--maroon);font-family:'Cormorant Garamond',serif;font-size:28px;}
@@ -392,10 +457,53 @@ const Cart = () => {
                 {formErr.name && <span className="cp-ferr">{formErr.name}</span>}
               </div>
               <div className="cp-field">
-                <label className="cp-flabel">Phone *</label>
-                <input value={form.phone} onChange={e => setForm(v=>({...v,phone:e.target.value}))}
-                  placeholder="10-digit mobile number" className={`cp-finput${formErr.phone?' err':''}`}/>
+                <label className="cp-flabel">Phone * {phoneVerified && <span style={{color:'#16a34a',fontWeight:700,letterSpacing:0}}>✓ Verified</span>}</label>
+                <div style={{display:'flex',gap:8}}>
+                  <input
+                    value={form.phone}
+                    onChange={e => handlePhoneChange(e.target.value)}
+                    placeholder="10-digit mobile" maxLength={10} inputMode="numeric"
+                    className={`cp-finput${formErr.phone?' err':''}`}
+                    style={{flex:1}}
+                    readOnly={phoneVerified}
+                  />
+                  {!phoneVerified && isValidPhone(form.phone) && (
+                    <button type="button" className="otp-send-btn" onClick={sendOtp}
+                      disabled={otpLoading || otpTimer > 0}>
+                      {otpLoading ? '...' : otpTimer > 0 ? `Resend (${otpTimer}s)` : otpSent ? 'Resend' : 'Send OTP'}
+                    </button>
+                  )}
+                </div>
                 {formErr.phone && <span className="cp-ferr">{formErr.phone}</span>}
+                {phoneVerified && (
+                  <div className="otp-verified">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Phone verified
+                    <button type="button" onClick={() => {setPhoneVerified(false);setOtpSent(false);setOtpValue('');setOtpError('');}}
+                      style={{background:'none',border:'none',color:'#9CA3AF',fontSize:11,cursor:'pointer',marginLeft:4,fontFamily:'inherit'}}>
+                      Change
+                    </button>
+                  </div>
+                )}
+                {otpSent && !phoneVerified && (
+                  <div style={{marginTop:8}}>
+                    <div className="otp-hint">Enter the 6-digit OTP sent to +91-{form.phone}</div>
+                    <div className="otp-row">
+                      <input
+                        type="text" inputMode="numeric" maxLength={6}
+                        value={otpValue} onChange={e => { setOtpValue(e.target.value.replace(/\D/g,'')); setOtpError(''); }}
+                        placeholder="• • • • • •" className="otp-input"
+                        onKeyDown={e => e.key==='Enter' && verifyOtp()}
+                      />
+                      <button type="button" className="otp-verify-btn" onClick={verifyOtp}
+                        disabled={otpLoading || otpValue.length !== 6}>
+                        {otpLoading ? '...' : 'Verify'}
+                      </button>
+                    </div>
+                    {otpError && <div className="otp-err">{otpError}</div>}
+                  </div>
+                )}
+                {!otpSent && !phoneVerified && otpError && <div className="otp-err">{otpError}</div>}
               </div>
               <div className="cp-field full">
                 <label className="cp-flabel">Address *</label>

@@ -19,6 +19,7 @@ const scrapeRoutes = require("./routes/scrapeRoutes");
 const testimonialRoutes = require("./routes/testimonialRoutes");
 const newsletterRoutes = require("./routes/newsletterRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const otpRoutes = require("./routes/otpRoutes");
 
 // Connect to MongoDB
 connectDB();
@@ -52,6 +53,7 @@ app.use("/api/scrape", scrapeRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/blog", blogRoutes);
+app.use("/api/otp", otpRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
