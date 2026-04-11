@@ -1,57 +1,31 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const getPool = require("../config/mysql");
 
-// Protect middleware — verifies Bearer JWT and attaches req.user
 const protect = async (req, res, next) => {
   try {
     let token;
-
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer ")
-    ) {
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
       token = req.headers.authorization.split(" ")[1];
     }
-
     if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized. No token provided.",
-      });
+      return res.status(401).json({ success: false, message: "Not authorized. No token provided." });
     }
-
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Attach user from DB (excludes password by default)
-    const user = await User.findById(decoded.id);
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized. User no longer exists.",
-      });
+    const pool = getPool();
+    const [rows] = await pool.query("SELECT id, name, email, role FROM users WHERE id = ?", [decoded.id]);
+    if (!rows.length) {
+      return res.status(401).json({ success: false, message: "Not authorized. User no longer exists." });
     }
-
-    req.user = user;
+    req.user = { ...rows[0], _id: rows[0].id };
     next();
   } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Not authorized. Token is invalid or expired.",
-    });
+    return res.status(401).json({ success: false, message: "Not authorized. Token is invalid or expired." });
   }
 };
 
-// Admin middleware — must be used after protect
 const admin = (req, res, next) => {
-  if (req.user && req.user.role === "admin") {
-    return next();
-  }
-  return res.status(403).json({
-    success: false,
-    message: "Access denied. Admins only.",
-  });
+  if (req.user && req.user.role === "admin") return next();
+  return res.status(403).json({ success: false, message: "Access denied. Admins only." });
 };
 
 module.exports = { protect, admin };

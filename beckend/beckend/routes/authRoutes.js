@@ -1,8 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+const getPool = require("../config/mysql");
 const { register, login, getMe, logout } = require("../controllers/authController");
 const { protect } = require("../middleware/auth");
-const User = require("../models/User");
+
+const newId = () => crypto.randomBytes(12).toString("hex");
 
 // POST /api/auth/register
 router.post("/register", register);
@@ -14,14 +18,19 @@ router.post("/setup-admin", async (req, res) => {
     if (secret !== process.env.JWT_SECRET) {
       return res.status(403).json({ success: false, message: "Forbidden" });
     }
-    let user = await User.findOne({ email });
-    if (user) {
-      user.role = "admin";
-      await user.save();
-      return res.json({ success: true, message: "Role updated to admin", email: user.email });
+    const pool = getPool();
+    const [existing] = await pool.query("SELECT id, email FROM users WHERE email = ?", [email.toLowerCase().trim()]);
+    if (existing.length) {
+      await pool.query("UPDATE users SET role = 'admin' WHERE id = ?", [existing[0].id]);
+      return res.json({ success: true, message: "Role updated to admin", email: existing[0].email });
     }
-    user = await User.create({ name, email, password, role: "admin" });
-    res.status(201).json({ success: true, message: "Admin created", email: user.email });
+    const hashed = await bcrypt.hash(password, 10);
+    const id = newId();
+    await pool.query(
+      "INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, 'admin')",
+      [id, name, email.toLowerCase().trim(), hashed]
+    );
+    res.status(201).json({ success: true, message: "Admin created", email: email.toLowerCase().trim() });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

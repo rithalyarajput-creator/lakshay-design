@@ -1,42 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const {
-  getAllCoupons,
-  createCoupon,
-  updateCoupon,
-  deleteCoupon,
-  validateCoupon,
-} = require("../controllers/couponController");
+const getPool = require("../config/mysql");
+const { getAllCoupons, createCoupon, updateCoupon, deleteCoupon, validateCoupon } = require("../controllers/couponController");
 const { protect, admin } = require("../middleware/auth");
 
-// POST /api/coupons/validate  — public
-// NOTE: defined before /:id routes to avoid conflict
+// POST /api/coupons/validate — public
 router.post("/validate", validateCoupon);
 
-// GET /api/coupons/active — public (for frontend cart to show available coupons)
+// GET /api/coupons/active — public
 router.get("/active", async (req, res) => {
   try {
-    const Coupon = require("../models/Coupon");
+    const pool = getPool();
     const now = new Date();
-    const coupons = await Coupon.find({
-      isActive: true,
-      $or: [{ endDate: null }, { endDate: { $gte: now } }],
-      $or: [{ startDate: null }, { startDate: { $lte: now } }],
-    }).select("code description type value minOrder maxDiscount totalLimit usedCount endDate");
-    res.json({ success: true, data: coupons });
+    const [rows] = await pool.query(
+      "SELECT code, description, type, value, minOrder, maxDiscount, usageLimit, usedCount, expiresAt FROM coupons WHERE isActive = 1 AND (expiresAt IS NULL OR expiresAt >= ?)",
+      [now]
+    );
+    const fmt = (r) => ({
+      _id: r.id, code: r.code, description: r.description || "",
+      type: r.type, value: parseFloat(r.value) || 0,
+      minOrder: parseFloat(r.minOrder) || 0,
+      maxDiscount: r.maxDiscount ? parseFloat(r.maxDiscount) : null,
+      totalLimit: r.usageLimit, usedCount: r.usedCount || 0, endDate: r.expiresAt,
+    });
+    res.json({ success: true, data: rows.map(fmt) });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 });
 
-// GET /api/coupons  — admin only
 router.get("/", protect, admin, getAllCoupons);
-
-// POST /api/coupons  — admin only
 router.post("/", protect, admin, createCoupon);
-
-// PUT /api/coupons/:id  — admin only
 router.put("/:id", protect, admin, updateCoupon);
-
-// DELETE /api/coupons/:id  — admin only
 router.delete("/:id", protect, admin, deleteCoupon);
 
 module.exports = router;

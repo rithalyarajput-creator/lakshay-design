@@ -1,54 +1,53 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
+const crypto = require("crypto");
+const getPool = require("../config/mysql");
 const { protect, admin } = require("../middleware/auth");
 
-// ── Inline Newsletter Schema ──────────────────────────────────
-const newsletterSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  name: { type: String, default: "" },
-  isActive: { type: Boolean, default: true },
-}, { timestamps: true });
+const newId = () => crypto.randomBytes(12).toString("hex");
+const fmt = (row) => row ? { _id: row.id, id: row.id, email: row.email, name: row.name, isActive: !!row.isActive, createdAt: row.createdAt } : null;
 
-const Newsletter = mongoose.models.Newsletter || mongoose.model("Newsletter", newsletterSchema);
-
-// POST /api/newsletter/subscribe  (public)
+// POST /api/newsletter/subscribe (public)
 router.post("/subscribe", async (req, res) => {
   const { email, name } = req.body;
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ success: false, message: "Valid email is required" });
   }
   try {
-    const existing = await Newsletter.findOne({ email: email.toLowerCase().trim() });
-    if (existing) {
-      if (!existing.isActive) {
-        existing.isActive = true;
-        await existing.save();
+    const pool = getPool();
+    const clean = email.toLowerCase().trim();
+    const [existing] = await pool.query("SELECT * FROM newsletters WHERE email = ?", [clean]);
+    if (existing.length) {
+      if (!existing[0].isActive) {
+        await pool.query("UPDATE newsletters SET isActive = 1 WHERE id = ?", [existing[0].id]);
         return res.json({ success: true, message: "You've been re-subscribed!" });
       }
       return res.json({ success: true, message: "You're already subscribed!" });
     }
-    await Newsletter.create({ email: email.toLowerCase().trim(), name: name || "" });
+    const id = newId();
+    await pool.query("INSERT INTO newsletters (id, email, name, isActive) VALUES (?, ?, ?, 1)", [id, clean, name || ""]);
     res.status(201).json({ success: true, message: "Subscribed successfully!" });
   } catch (err) {
     res.status(500).json({ success: false, message: "Something went wrong. Try again!" });
   }
 });
 
-// GET /api/newsletter/subscribers  (admin only)
+// GET /api/newsletter/subscribers (admin only)
 router.get("/subscribers", protect, admin, async (req, res) => {
   try {
-    const subscribers = await Newsletter.find().sort({ createdAt: -1 });
-    res.json({ success: true, data: subscribers });
+    const pool = getPool();
+    const [rows] = await pool.query("SELECT * FROM newsletters ORDER BY createdAt DESC");
+    res.json({ success: true, data: rows.map(fmt) });
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// DELETE /api/newsletter/subscribers/:id  (admin only)
+// DELETE /api/newsletter/subscribers/:id (admin only)
 router.delete("/subscribers/:id", protect, admin, async (req, res) => {
   try {
-    await Newsletter.findByIdAndDelete(req.params.id);
+    const pool = getPool();
+    await pool.query("DELETE FROM newsletters WHERE id = ?", [req.params.id]);
     res.json({ success: true, message: "Subscriber removed" });
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });

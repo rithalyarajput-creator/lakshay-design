@@ -103,7 +103,7 @@ lakshay-design/
 | Frontend  | React 18, React Router v6, CSS Modules  |
 | Admin     | React 18, Axios, Recharts               |
 | Backend   | Node.js 20, Express.js                  |
-| Database  | MongoDB Atlas (cloud)                   |
+| Database  | MySQL (MariaDB) on Hostinger            |
 | Auth      | JWT + bcryptjs                          |
 | Hosting   | Hostinger Shared Hosting                |
 | Server    | Apache + PHP proxy → Node.js (PM2)      |
@@ -353,11 +353,15 @@ REACT_APP_API_URL=https://clicksemrus.com/api
 ```
 PORT=3000
 NODE_ENV=production
-MONGODB_URI=mongodb+srv://...@cluster0.oitjdhr.mongodb.net/ecommerce
 JWT_SECRET=supersecretjwt2024ecommerce
 JWT_EXPIRE=7d
 FAST2SMS_API_KEY=your_key_here   # needs ₹100 recharge at fast2sms.com
 ```
+
+### MySQL (Hostinger)
+Database: `u518768974_amshine`  
+User: `u518768974_amshine_user`  
+Config: `beckend/beckend/config/mysql.js` (uses unix socket `/tmp/mysql.sock`)
 
 ---
 

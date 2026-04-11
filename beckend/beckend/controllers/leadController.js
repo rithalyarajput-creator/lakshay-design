@@ -1,48 +1,54 @@
-const Lead = require("../models/Lead");
+const crypto = require("crypto");
+const getPool = require("../config/mysql");
 
-// POST /api/leads  — frontend form submit
+const newId = () => crypto.randomBytes(12).toString("hex");
+const fmt = (row) => row ? { _id: row.id, id: row.id, ...row, createdAt: row.createdAt } : null;
+
 const createLead = async (req, res) => {
   try {
-    const { name, email, phone, subject, message } = req.body;
+    const { name, email, phone, message } = req.body;
     if (!name || !email || !message) {
       return res.status(400).json({ success: false, message: "Name, email and message are required." });
     }
-    const lead = await Lead.create({ name, email, phone, subject, message });
-    res.status(201).json({ success: true, message: "Message received!", lead });
+    const pool = getPool();
+    const id = newId();
+    await pool.query(
+      "INSERT INTO leads (id, name, email, phone, message, status) VALUES (?, ?, ?, ?, ?, 'new')",
+      [id, name, email, phone || "", message]
+    );
+    const [rows] = await pool.query("SELECT * FROM leads WHERE id = ?", [id]);
+    res.status(201).json({ success: true, message: "Message received!", lead: fmt(rows[0]) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// GET /api/leads  — admin panel
 const getAllLeads = async (req, res) => {
   try {
-    const leads = await Lead.find().sort({ createdAt: -1 });
-    res.json({ success: true, leads });
+    const pool = getPool();
+    const [rows] = await pool.query("SELECT * FROM leads ORDER BY createdAt DESC");
+    res.json({ success: true, leads: rows.map(fmt) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// PATCH /api/leads/:id/status  — mark read/replied
 const updateLeadStatus = async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      { new: true }
-    );
-    if (!lead) return res.status(404).json({ success: false, message: "Lead not found." });
-    res.json({ success: true, lead });
+    const pool = getPool();
+    await pool.query("UPDATE leads SET status = ? WHERE id = ?", [req.body.status, req.params.id]);
+    const [rows] = await pool.query("SELECT * FROM leads WHERE id = ?", [req.params.id]);
+    if (!rows.length) return res.status(404).json({ success: false, message: "Lead not found." });
+    res.json({ success: true, lead: fmt(rows[0]) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// DELETE /api/leads/:id
 const deleteLead = async (req, res) => {
   try {
-    await Lead.findByIdAndDelete(req.params.id);
+    const pool = getPool();
+    await pool.query("DELETE FROM leads WHERE id = ?", [req.params.id]);
     res.json({ success: true, message: "Lead deleted." });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
